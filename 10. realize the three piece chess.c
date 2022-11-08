@@ -116,41 +116,34 @@ char Iswin(char board[Row][Column],int row,int column)
     char ch=0;
     int i=0;
     int j=0;
+    for(i=0;i<Row;i++)
+    {
+        for (j=0;j<Column;j++)
+        {
+            if (board[i][0]==board[i][1] && board[i][1]==board[i][2] && board[i][1]!=' ')
+            {
+                ch=board[i][0];
+                return ch;
+            } 
+            else if (board[0][j]==board[1][j] && board[1][j]==board[2][j] && board[1][j]!=' ')
+            {
+                ch=board[0][j];
+                return ch;
+            }
+            else if ((board[0][0]==board[1][1] && board[1][1]==board[2][2] || board[0][2]==board[1][1] && board[1][1]==board[2][0])
+            && board[1][1]!=' ')
+            {
+                ch=board[1][1];
+                return ch;
+            }
+        }
+    }
     if (flag)
     {
         return 't';
     }
-    else
-    {
-        for(i=0;i<Row;i++)
-        {
-            for (j=0;j<Column;j++)
-            {
-                if (board[i][0]==board[i][1] && board[i][1]==board[i][2])
-                {
-                    ch=board[i][0];
-                    break;
-                } 
-                else if (board[0][j]==board[1][j] && board[1][j]==board[2][j])
-                {
-                    ch=board[0][j];
-                    break;
-                }
-                else if (board[0][0]==board[1][1] && board[1][1]==board[2][2] || board[0][2]==board[1][1] && board[1][1]==board[2][0])
-                {
-                    ch=board[1][1];
-                    break;
-                }  
-                else
-                {
-                    return 'c';
-                }   
-            }
-            break;   
-        }
-        return ch;
-    }
-    
+    ch='c';
+    return ch;
 }
 
 void menu()  //菜单
@@ -185,7 +178,7 @@ void game() //开始游戏，调用相关函数
         }
         else if (ret=='t')
         {
-            printf("平局");
+            printf("平局\n ");
             break;
         }
         
