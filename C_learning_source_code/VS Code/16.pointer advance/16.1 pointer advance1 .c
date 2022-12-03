@@ -3,7 +3,7 @@
 
 
 //5.字符串排序函数实现
-void sort(char*name[],int n)
+void sort(char**name,int n)
 {
     char*temp;
     int i,j;
@@ -30,7 +30,8 @@ void print(char*name[],int n)
     
 }
 
-void print1(int (*p)[5],int x,int y ) //7.  用一维数组的地址接收传过来的首元素地址,存放于指针变量
+void print1(int (*p)[5],int x,int y ) 
+//7.  用一维数组的地址接收传过来的首元素地址,存放于指针变量
 {
     int i=0;
     int j=0;
@@ -43,6 +44,22 @@ void print1(int (*p)[5],int x,int y ) //7.  用一维数组的地址接收传过
         }
         printf("\n");
     }
+}
+
+// 8.求最大值max函数
+int  max(int x, int y)
+{
+    int z;
+    if(x>y)
+    {
+        z=x;
+    }
+    else
+    {
+        z=y;
+    }
+    return z;
+
 }
 
 
@@ -63,7 +80,7 @@ int main()
         // 2. 指针类型数组指针的表达
         char c[]="sxcasdc";
         char b='w';
-        char*arr[7]={"acc","se5","des5","84sdw","udi",&c[0],&b};
+        char*arr[7]={"acc","se5","des5","84sdw","udi",&c[0],&b}; 
         char*(*pa)[7]=&arr; //pa是一个指针，指向一个大小为5的数组，该数组存放char类型的指针
         char arr1[6]={1,2,3,4,5,6};
         char(*p)[6]=&arr1;
@@ -121,8 +138,8 @@ int main()
         ,"Stereoscopic","Digital","champion","264sASD","sDae2971"};
         int n=sizeof(name)/sizeof(name[0]);
         // 函数声明
-        void sort(char*name[],int n);
-        void print(char*name[],int n);
+        void sort(char**name,int n);
+        void print(char**name,int n);
         // 函数调用
         sort(name,n);  //排序
         print(name,n); //输出
@@ -170,4 +187,75 @@ int main()
         print1(arr,3,5); // 二维数组首元素的地址其实就是第一行的一维数组地址，且地址加1跳过1行
 
     }
+
+    {
+        //8. 函数指针！
+        // 通过指针方式求两个数的较大者
+        int max(int x , int y);// 函数声明
+        int (*p)(int ,int );  //定义指向函数的指针变量p
+        int a,b,c,d;
+        p=max;
+        printf("please enter a and b:");
+        scanf("%d %d",&a,&b);
+        // 解引用调用函数
+        c=(*p)(a,b);
+        d=p(a,b);
+        //函数指针也可以不解引用，直接调用，可以理解为max函数本来就是用他的地址来调用
+        printf("较大者是%d",c);
+        printf("较大者是%d",d);
+    }
+    printf("----------------------------------------------------------------\n");
+
+    {
+        // 8.1 函数指针的定义形式
+        void (*signal(int ,void(*)(int)))(int);
+        //此语句是一个函数声明
+        //signal是一个函数名，参数有两个，第一个是int,第二个是函数指针类型，该函数指针指向的函数参数是int,返回类型是void
+        //signal函数的返回类型也是一个函数指针，该函数指针指向的函数参数是int,返回类型是void
+
+        //可以用用户自定义类型进行简化
+        typedef void(* pfunc_t )(int);
+        pfunc_t signal(int,pfunc_t);
+    }
+
+    {
+        // 8.2 函数指针放入数组
+        // 函数指针放入数组，方便调用
+        int (*parr3[10])(int,int);
+        char * my_strcpy(char *dest,const char * src);
+        // 写一个函数指针pf指向my_strcpy
+        char*(*pf)(char*,const char*);
+        // 写一个函数指针数组，能够存放四个my_strcpy地址
+        char(*parr2[4])(char*,const char*);
+    }
 }
+
+    // {
+        // //8.3 函数指针的应用
+        // int input=0;
+        // int x=0;
+        // int y=0;
+        // do
+        // {
+        //     menu();
+        //     printf("请选择:>");
+        //     scanf("%d",&input);
+        //     printf("手动跳出getchar,并且输入两个操作数:");
+        //     scanf("%d%d",&x,&y);
+        //     switch (input)
+        //     {
+        //     case 1:
+        //         printf();
+        //         break;
+            
+        //     default:
+        //         break;
+        //     }
+
+
+            
+//         } while (/* condition */);
+        
+
+//     }
+// }
