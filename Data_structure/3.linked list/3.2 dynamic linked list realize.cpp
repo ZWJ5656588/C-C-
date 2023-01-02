@@ -1,73 +1,219 @@
 #include "3.2 dynamic linked list.h"
 
-// åˆå§‹åŒ–é“¾è¡¨
+
+// 1.³õÊ¼»¯Á´±í
 struct LinkNode *Init_LinkList()
 {
-    // åˆ›å»ºå¤´ç»“ç‚¹
+    // ´´½¨Í·½áµã
     struct LinkNode *header = (struct LinkNode *)malloc(sizeof(struct LinkNode));
-    header->data = -1;  // ä¸ç”¨å¤´ç»“ç‚¹æ•°æ®
+    header->data = -1; // ²»ÓÃÍ·½áµãÊı¾İ
     header->next = NULL;
 
-    // å°¾éƒ¨æŒ‡é’ˆ,ä¿æŒæŒ‡é’ˆå§‹ç»ˆæŒ‡å‘å°¾éƒ¨
+    // Î²²¿Ö¸Õë,±£³ÖÖ¸ÕëÊ¼ÖÕÖ¸ÏòÎ²²¿
     struct LinkNode *pReal = header;
 
     int val = -1;
     while (true)
     {
-        cout << "è¯·è¾“å…¥æ’å…¥çš„æ•°æ®" << endl;
+        cout << "ÇëÊäÈë²åÈëµÄÊı¾İ:" << endl;
         cin >> val;
         if (val == -1)
         {
             break;
         }
-        
 
-    // å…ˆåˆ›å»ºæ–°èŠ‚ç‚¹
-    struct LinkNode *newnode = (struct LinkNode*)malloc(sizeof(struct LinkNode));
-    newnode->data = val;
-    newnode->next = NULL;
+        // ÏÈ´´½¨ĞÂ½Úµã
+        struct LinkNode *newnode = (struct LinkNode *)malloc(sizeof(struct LinkNode));
+        newnode->data = val;
+        newnode->next = NULL;
 
-    // æ–°èŠ‚ç‚¹æ’å…¥åˆ°é“¾è¡¨
-    pReal->next = newnode;
-    newnode->next = NULL;
+        // ĞÂ½Úµã²åÈëµ½Á´±í
+        pReal->next = newnode;
+        newnode->next = NULL;
 
-    // æ›´æ–°å°¾éƒ¨æŒ‡é’ˆæŒ‡å‘
-    pReal = newnode;
-    
+        // ¸üĞÂÎ²²¿Ö¸ÕëÖ¸Ïò
+        pReal = newnode;
     }
-    
-    return header; //è¿”å›å¤´ç»“ç‚¹å³å¯
+
+    return header; // ·µ»ØÍ·½áµã¼´¿É
 }
 
-
-
-
-// åœ¨å€¼oldval åé¢æ’å…¥æ–°çš„æ•°æ®newval
-void InsertByValue_LinkList(struct LinkNode * header, int oldval, int newval)
+// 2. ÕÒµ½º¬ÓĞoldvalµÄÇ°ÇıÔª
+struct LinkNode *FindPrevious(int oldval, struct LinkNode *header)
 {
-    ;
+    struct LinkNode *p = header;
+    while (p->next != NULL && p->next->data != oldval)
+    {
+        p = p->next;
+    }
+    // ÒÔÏÂ²½Öè¿ÉÒÔÑ¡Ôñ Èç¹ûÒªÇóÃ»ÓĞÕÒµ½oldvalÊ±²åÈëµ½Á´±íÎ²²¿ Ôò×¢ÊÍµôÒÔÏÂ´úÂë¼´¿É
+#if 0
+    if (p->next == NULL)
+    {
+        p = NULL;
+    }
+#endif
+    return p;
 }
-// åˆ é™¤å€¼ä¸ºvalçš„èŠ‚ç‚¹
-void RemoveByValue_LinkList(struct LinkNode * header, int delval);
-// éå†
-void Foreach_LinkList(struct LinkNode * header)
+
+// ÔÚÖµoldval Î»ÖÃ²åÈëĞÂµÄÊı¾İnewval
+void InsertByValue_LinkList(struct LinkNode *header, int oldval, int newval)
 {
-    // å®šä¹‰è¾…åŠ©æŒ‡é’ˆ,ä¸éå†å¤´ç»“ç‚¹
     if (NULL == header)
     {
-        return ;
+        return;
+    }
+    // ÕÒµ½Ç°ÇıÔªµÄÖ¸Õëp,Ã»ÕÒµ½p == NULL
+    struct LinkNode *p = FindPrevious(oldval, header);
+    if (NULL == p)
+    {
+        cout<<"Á´±íÖĞ²»´æÔÚÖµ"<<oldval<<endl;
+        return;
+    }
+    // ´´½¨ÁÙÊ±½Úµãtmpcell½ÓÊÕnewval²¢½øĞĞ²åÈë²Ù×÷
+    struct LinkNode *tmpcell;
+    tmpcell = (struct LinkNode*)malloc(sizeof(struct LinkNode));
+    // ²»ÒªÍü¼Ç¼ì²â¶¯Ì¬¿ª±ÙÄÚ´æÊÇ·ñ³É¹¦
+    if (tmpcell == NULL)
+    {
+        cout<<strerror(errno)<<endl;
+    }
+    tmpcell->data = newval;
+    tmpcell->next = p->next;
+    p->next = tmpcell; 
+}
+
+// 3. É¾³ıÖµÎªvalµÄ½Úµã
+void RemoveByValue_LinkList(struct LinkNode *header, int delval)
+{
+    if (NULL == header)
+    {
+        return;
+    }
+    struct LinkNode *pprev = FindPrevious(header,delval);
+
+    // ÅĞ¶Ï pprev ÊÇ·ñÎªÁ´±í×îºóÒ»¸öÔªËØ Èç¹ûÊÇ Ôò´ú±íÁ´±íÖĞÃ»ÓĞdeval
+    if (pprev->next == NULL)
+    {
+        cout<<"Á´±íÖĞÃ»ÓĞÖµ"<<delval<<"ÎŞ·¨Ö´ĞĞÉ¾³ı²Ù×÷"<<endl;
+        return;
+    }
+    else
+    {
+        struct LinkNode * tmp = pprev->next;
+        pprev->next = tmp->next;
+        free(tmp);
+        tmp = NULL;
     }
 
-    // è¾…åŠ©æŒ‡é’ˆå˜é‡
+}
+
+// 4. ±éÀú
+void Foreach_LinkList(struct LinkNode *header)
+{
+    // ¶¨Òå¸¨ÖúÖ¸Õë,²»±éÀúÍ·½áµã
+    if (NULL == header)
+    {
+        return;
+    }
+
+    // ¸¨ÖúÖ¸Õë±äÁ¿´ÓÍ·½áµãµÄÏÂÒ»¸öÎ»ÖÃ¿ªÊ¼±éÀú
     struct LinkNode *pCurrent = header->next;
 
     while (pCurrent != NULL)
     {
-        cout<<pCurrent->data<<" ";
+        cout << pCurrent->data << " ";
         pCurrent = pCurrent->next;
-    }       
+    }
 }
-// é”€æ¯
-void Destroy_LinkList(struct LinkNode * header);
-// æ¸…ç©º
-void Clear_LinkList(struct LinkNode * header);
+// 5. Ïú»Ù
+void Destroy_LinkList(struct LinkNode *header)
+{
+    if (NULL == header)
+    {
+        return;
+    }
+
+    // ¸¨ÖúÖ¸Õë±äÁ¿
+    struct LinkNode *pCurrent = header;
+
+    while (pCurrent != NULL)
+    {
+        //ÏÈ±£´æµ±Ç°½ÚµãµÄÏÂÒ»¸ö½ÚµãµØÖ·
+        struct LinkNode* pNext = pCurrent->next;
+
+        // ÊÍ·Åµ±Ç°½ÚµãÄÚ´æ
+        free(pCurrent);
+
+        // Ö¸ÕëºóÒÆ
+        pCurrent = pNext;
+    }
+    
+}
+// 6. Çå¿Õ
+void Clear_LinkList(struct LinkNode *header)
+{
+    if(NULL == header)
+    {
+        return;
+    }
+    // Çå¿Õ¡ª¡ª¡ª¡ª½ö±£ÁôÍ·½áµã
+    // ¸¨ÖúÖ¸Õë±äÁ¿,¿ªÊ¼Ö¸ÏòµÚ¶ş¸ö½Úµã£¬ÒòÎªÍ·½áµã²»ÊÍ·Å
+    struct LinkNode *pCurrent = header->next;
+
+    while (pCurrent != NULL)
+    {
+        // ÏÈ±£´æµ±Ç°½ÚµãÏÂÒ»¸ö½ÚµãµÄµØÖ·
+        struct LinkNode *pNext = pCurrent->next;
+
+        // ÊÍ·Åµ±Ç°½ÚµãÄÚ´æ
+        free(pCurrent);
+
+        // pCurrentÖ¸ÏòÏÂÒ»½Úµã
+        pCurrent = pNext;
+    }
+    header->next = NULL;
+}
+
+
+
+
+
+
+
+
+// ½øĞĞµ÷ÊÔtest
+void text()
+{
+    // ³õÊ¼»¯Á´±í 100 200 666 300 400 500 600
+    struct LinkNode *header1 = Init_LinkList();
+
+    // ´òÓ¡Á´±í
+    Foreach_LinkList(header1);
+
+    // ²åÈëÊı¾İ
+    InsertByValue_LinkList(header1,800,666);
+    
+    // ´òÓ¡Á´±í
+    cout<<"\n"<<"---------------------"<<endl;
+    Foreach_LinkList(header1);
+
+    // Çå¿ÕÁ´±í
+    Clear_LinkList(header1);
+    
+    // ÔÙ´ÎÏò¿ÕÁ´±íÌí¼ÓÊı¾İ
+    InsertByValue_LinkList(header1,1000,101);
+    InsertByValue_LinkList(header1,1000,985);
+
+    // ÔÙ´Î´òÓ¡
+    cout<<"\n"<<"---------------------"<<endl;
+    Foreach_LinkList(header1);
+}
+
+
+
+
+int main()
+{
+    text();
+}

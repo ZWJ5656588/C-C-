@@ -2,6 +2,8 @@
 # include<iostream>
 # include<stdlib.h>
 # include<stdbool.h>
+# include<errno.h>
+# include<string.h>
 
 using namespace std;
 
@@ -19,7 +21,9 @@ extern "C" {
 
     // 初始化链表
     struct LinkNode*Init_LinkList();
-    // 在值oldval 后面插入心的数据newval
+    // 找到含有oldval的前驱元
+    struct LinkNode*FindPrevious(int oldval,struct LinkNode*header);
+    // 在值oldval 位置插入心的数据newval
     void InsertByValue_LinkList(struct LinkNode *header,int oldval,int newval);
     // 删除值为val的节点
     void RemoveByValue_LinkList(struct LinkNode *header,int delval);

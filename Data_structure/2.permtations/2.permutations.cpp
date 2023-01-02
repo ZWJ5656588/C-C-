@@ -13,6 +13,8 @@ void my_swap(int arr[], int k, int j)
 	arr[j] = tmp;
 }
 
+
+// 全排列算法
 int resove(int n)
 {
 	if (n == 3)

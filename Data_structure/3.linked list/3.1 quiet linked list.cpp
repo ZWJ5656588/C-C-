@@ -1,5 +1,6 @@
 #include<iostream>
 using namespace std;
+# define MAXSIZE  10
 
 
 // 链表是一种数据结构 包括指针域和数据域
@@ -7,6 +8,15 @@ struct LinkNode{
     int data;
     struct LinkNode* next;
 };
+
+// 线性表顺序存储  
+typedef struct LNode*List;
+struct LNode{
+    int Data[MAXSIZE];
+    int Last;
+};
+struct LNode L;
+List PtrL;
 
 int main()
 {
